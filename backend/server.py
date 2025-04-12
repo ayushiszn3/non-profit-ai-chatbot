@@ -7,32 +7,43 @@ from flask import Flask
 from flask_cors import CORS
 import threading
 
-# Load .env variables
+# Load environment variables
 load_dotenv()
 api_key = os.getenv("OPENROUTER_API_KEY")
 
-# Configure OpenRouter Client
+# Configure OpenRouter client
 client = AsyncOpenAI(
     api_key=api_key,
     base_url="https://openrouter.ai/api/v1"
 )
 
-# Flask App (CORS enabled)
+# Flask app setup
 app = Flask(__name__)
 CORS(app)
 
-# Query OpenRouter with multilingual support
+@app.route('/')
+def home():
+    return "Chatbot server is running"
+
 async def query_openrouter(prompt):
     try:
         response = await client.chat.completions.create(
-            model="openai/gpt-3.5-turbo",
+            model="openai/gpt-3.5-turbo",  # or "anthropic/claude-3-haiku"
             temperature=0.5,
             messages=[
                 {
                     "role": "system",
                     "content": (
-                        "You are a multilingual assistant for NGOs. Automatically detect the user's language "
-                        "and respond in the same language. You assist with grants, donor reporting, legal compliance, etc."
+                        "You are a multilingual assistant. Follow these rules strictly:\n"
+                        "1. Respond in the SAME LANGUAGE as the user's message\n"
+                        "2. For unclear inputs (code, numbers, mixed languages), use English\n"
+                        "3. Never translate the user's message - only match their language\n"
+                        "4. For technical terms (GitHub, API, etc.), keep them in original form\n"
+                        "Examples:\n"
+                        "- User: 'Bonjour' → French response\n"
+                        "- User: 'Hola' → Spanish response\n"
+                        "- User: 'Hello' → English response\n"
+                        "- User: 'git clone' → English response (unclear)"
                     )
                 },
                 {"role": "user", "content": prompt}
@@ -42,26 +53,25 @@ async def query_openrouter(prompt):
     except Exception as e:
         return f"Error: {str(e)}"
 
-# WebSocket Chat Handler
 async def handle_message(websocket):
     async for message in websocket:
-        print(f"User: {message}")
+        print(f"User ({len(message)} chars): {message[:50]}...")
         reply = await query_openrouter(message)
         await websocket.send(reply)
 
-# WebSocket Server
 async def websocket_server():
     async with websockets.serve(handle_message, "localhost", 6789):
         print("✅ WebSocket server running at ws://localhost:6789")
-        await asyncio.Future()  # Run forever
+        await asyncio.Future()  # Run indefinitely
 
-# Run Flask and WebSocket in parallel
-def start_flask():
-    app.run(host="0.0.0.0", port=5000)
-
-def start_websocket():
-    asyncio.run(websocket_server())
+def run_flask():
+    app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)
 
 if __name__ == "__main__":
-    threading.Thread(target=start_flask).start()
-    start_websocket()
+    # Start Flask in a daemon thread
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.daemon = True
+    flask_thread.start()
+    
+    # Start WebSocket server in main thread
+    asyncio.run(websocket_server())
