@@ -30,6 +30,9 @@ ngo-ai-chatbot/
 │   ├── index.html
 │   ├── script.js
 │   └── styles.css
+├── assets/
+│   ├── chatbotimg1.png
+│   └── chatbotimg2.png
 ```
 
 ---
