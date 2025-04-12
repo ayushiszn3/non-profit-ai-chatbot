@@ -20,10 +20,17 @@ A real-time, multilingual chatbot designed to assist NGOs with tasks like grant 
 
 ## 🗂️ Folder Structure
 
-ngo-ai-chatbot/ ├── backend/ │ ├── server.py │ ├── requirements.txt │ └── .env ├── frontend/ │ ├── index.html │ ├── script.js │ └── styles.css └── assets/ ├── chatbotimg1.png └── chatbotimg2.png
-yaml
-Copy
-Edit
+```
+ngo-ai-chatbot/
+├── backend/
+│   ├── server.py
+│   ├── requirements.txt
+│   └── .env
+├── frontend/
+│   ├── index.html
+│   ├── script.js
+│   └── styles.css
+```
 
 ---
 
@@ -34,50 +41,76 @@ Edit
 ```bash
 git clone https://github.com/your-username/ngo-ai-chatbot.git
 cd ngo-ai-chatbot
-2. Setup Python Backend
-bash
-Copy
-Edit
+```
+
+### 2. Setup Python Backend
+
+```bash
 cd backend
 python -m venv venv
 source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-3. Add Environment Variable
-Create a .env file inside the backend/ folder:
-env
-Copy
-Edit
+```
+
+### 3. Add Environment Variable
+
+Create a `.env` file inside the `backend/` folder:
+
+```env
 OPENROUTER_API_KEY=your_openrouter_api_key
-4. Start the Server
-bash
-Copy
-Edit
+```
+
+### 4. Start the Server
+
+```bash
 python server.py
+```
+
 This will:
-Start the Flask backend on http://localhost:5000
-Start WebSocket server on ws://localhost:6789
-💡 Usage
+- Start the Flask backend on `http://localhost:5000`
+- Start WebSocket server on `ws://localhost:6789`
 
-Open frontend/index.html in your browser.
-Type a question (NGO-related) in the chat box.
-Toggle Light/Dark mode using the button in the corner.
-Get real-time responses powered by GPT.
-📸 Chat Interface Preview
+---
 
-Here’s how the chat interface looks in action:
-🧠 Example Questions
+## 💡 Usage
 
-How do I apply for international donor grants in India?
-🧰 Tech Stack
+1. Open `frontend/index.html` in your browser.
+2. Type a question (NGO-related) in the chat box.
+3. Toggle Light/Dark mode using the button in the corner.
+4. Get real-time responses powered by GPT.
 
-Backend: Python, Flask, WebSockets, asyncio
-Frontend: HTML, CSS (custom theming), JavaScript
-AI Engine: OpenRouter GPT (GPT-3.5-Turbo or compatible)
-🔒 License
+---
 
-This project is licensed under the MIT License.
-🙌 Contributing
+## 📸 Preview
+
+![Chat interface Preview light theme](assets/chatbotimg1.png)
+![Chat interface Preview dark theme](assets/chatbotimg2.png)
+
+---
+
+## 🧠 Example Questions
+
+- *How do I apply for international donor grants in India?*
+
+---
+
+## 🧰 Tech Stack
+
+- **Backend:** Python, Flask, WebSockets, asyncio
+- **Frontend:** HTML, CSS (custom theming), JavaScript
+- **AI Engine:** OpenRouter GPT (GPT-3.5-Turbo or compatible)
+
+---
+
+## 🔒 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 🙌 Contributing
 
 Feel free to fork and contribute! Open a pull request for major changes.
 
+---
 
